@@ -19,13 +19,13 @@ const eventNames = {
 const eventKeys = Object.keys(eventNames)
 
 class Racer {
-    constructor(client) {
-        this.wpm = client.opts.wpm
-        this.accuracy = client.opts.accuracy
-        this.useNitros = client.opts.useNitros
-        this.targetPosition = client.opts.targetPosition
+    constructor(user) {
+        this.wpm = user.opts.wpm
+        this.accuracy = user.opts.accuracy
+        this.useNitros = user.opts.useNitros
+        this.targetPosition = user.opts.targetPosition
 
-        this.client = client
+        this.user = user
         this.emitter = mitt()
         this.ws = null
 
@@ -44,7 +44,7 @@ class Racer {
             }),
             {
                 headers: {
-                    Cookie: utils.serializeCookies(this.client.ntClient._cookies),
+                    Cookie: utils.serializeCookies(this.user.getClient()._cookies),
                     'User-Agent': 'Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/69.0.3497.100 Safari/537.36'
                 },
                 origin: SITE_URL
