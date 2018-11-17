@@ -4,6 +4,20 @@ const WebSocket = require('ws')
 const { SITE_URL, SOCKET_URL } = require('./constants')
 const utils = require('./utils')
 
+const eventNames = {
+    // Race
+    countdown: 'raceCountdown',
+    error: 'raceError',
+    racing: 'raceStart',
+    setup: 'raceSetup',
+    status: 'raceStatus',
+    update: 'raceUpdate',
+    // Player
+    joined: 'playerJoin',
+    left: 'playerLeave'
+}
+const eventKeys = Object.keys(eventNames)
+
 class Racer {
     constructor(client) {
         this.wpm = client.opts.wpm
@@ -80,50 +94,20 @@ class Racer {
         if (!parsed.hasOwnProperty('payload')) {
             return
         }
-        const msgPairs = {
-            joined: 'playerJoin',
-            left: 'playerLeave',
-            setup: 'raceSetup',
-            update: 'raceUpdate'
+
+        const event = parsed.payload.status || parsed.msg
+        if (eventKeys.includes(event)) {
+            this.emitter.emit(eventNames[event], parsed.payload)
         }
-        switch (parsed.msg) {
-            case 'joined':
-            case 'left':
-            case 'setup':
-            case 'update':
-                this.emitter.emit(msgPairs[parsed.msg], parsed.payload)
-                break
-        }
-        if (parsed.msg === 'update') {
-            parsed.payload.racers.map(racer => {
-                if (racer.c) {
-                    this.emitter.emit('playerFinish', racer)
-                }
-                if (racer.d) {
-                    this.emitter.emit('playerDisqualify', racer)
-                }
-                if (racer.e) {
-                    this.emitter.emit('playerError', racer)
-                }
-                if (racer.n) {
-                    this.emitter.emit('playerNitro', racer)
-                }
-            })
-        }
-        const statusMap = {
-            countdown: 'countdownStart',
-            racing: 'raceStart'
-        }
-        switch (parsed.payload.status) {
+
+        switch (event) {
             case 'countdown':
-                this.emitter.emit('countdownStart', parsed.payload)
                 this.lessonLength = parsed.payload.l.length
                 break
             case 'racing':
-                this.emitter.emit('raceStart', parsed.payload)
                 let errors = 0
                 let typed = 0
-                let maxErrors = this.lessonLength * (1 - this.accuracy)
+                const maxErrors = this.lessonLength * (1 - this.accuracy)
                 this.intervalId = setInterval(() => {
                     const isIncorrect = Math.random() > this.accuracy
                     this.send({
@@ -132,8 +116,22 @@ class Racer {
                         payload: (isIncorrect && errors < maxErrors) ? { e: ++errors } : { t: ++typed }
                     })
                 }, (12000 / this.wpm))
-                // Sent every 500ms
-                // TODO: Target a random position (e.g. first 35%, second 25%, third 15%, fourth 15%, fifth 10%)
+                break
+            case 'update':
+                parsed.payload.racers.map(racer => {
+                    if (racer.c) {
+                        this.emitter.emit('playerFinish', racer)
+                    }
+                    if (racer.d) {
+                        this.emitter.emit('playerDisqualify', racer)
+                    }
+                    if (racer.e) {
+                        this.emitter.emit('playerError', racer)
+                    }
+                    if (racer.n) {
+                        this.emitter.emit('playerNitro', racer)
+                    }
+                })
                 break
         }
     }
