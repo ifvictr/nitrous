@@ -23,7 +23,7 @@ class Racer {
     constructor(user) {
         this.wpm = 0
         this.accuracy = 0
-        this.targetPosition = 0
+        this.targetPlace = 0
 
         this.user = user
         this.emitter = mitt()
@@ -54,10 +54,10 @@ class Racer {
         this.ws.on('message', this.onMessage)
 
         // Prepare random stats for upcoming race
-        const { wpm, accuracy, targetPosition } = this.getRandomStats()
+        const { wpm, accuracy, targetPlace } = this.getRandomStats()
         this.setWPM(wpm)
         this.setAccuracy(accuracy)
-        this.setTargetPosition(targetPosition)
+        this.setTargetPlace(targetPlace)
     }
 
     stop() {
@@ -150,12 +150,12 @@ class Racer {
         this.accuracy = accuracy
     }
 
-    setTargetPosition(position) {
-        this.targetPosition = position
+    setTargetPlace(place) {
+        this.targetPlace = place
     }
 
     getRandomStats() {
-        const targetPosition = parseInt(weighted.select({
+        const targetPlace = parseInt(weighted.select({
             1: 0.4,
             2: 0.3,
             3: 0.15,
@@ -165,7 +165,7 @@ class Racer {
         return {
             wpm: utils.getRandomInt(...this.user.wpmRange),
             accuracy: utils.getRandomFloat(...this.user.accuracyRange, 4),
-            targetPosition
+            targetPlace
         }
     }
 }
