@@ -1,5 +1,6 @@
 const mitt = require('mitt')
 const qs = require('qs')
+const weighted = require('weighted')
 const WebSocket = require('ws')
 const { SITE_URL, SOCKET_URL } = require('./constants')
 const utils = require('./utils')
@@ -20,10 +21,9 @@ const eventKeys = Object.keys(eventNames)
 
 class Racer {
     constructor(user) {
-        this.wpm = user.opts.wpm
-        this.accuracy = user.opts.accuracy
-        this.useNitros = user.opts.useNitros
-        this.targetPosition = user.opts.targetPosition
+        this.wpm = 0
+        this.accuracy = 0
+        this.targetPosition = 0
 
         this.user = user
         this.emitter = mitt()
@@ -52,6 +52,12 @@ class Racer {
         )
         this.ws.on('open', this.onOpen)
         this.ws.on('message', this.onMessage)
+
+        // Prepare random stats for upcoming race
+        const { wpm, accuracy, targetPosition } = this.getRandomStats()
+        this.setWPM(wpm)
+        this.setAccuracy(accuracy)
+        this.setTargetPosition(targetPosition)
     }
 
     stop() {
@@ -142,6 +148,25 @@ class Racer {
 
     setAccuracy(accuracy) {
         this.accuracy = accuracy
+    }
+
+    setTargetPosition(position) {
+        this.targetPosition = position
+    }
+
+    getRandomStats() {
+        const targetPosition = parseInt(weighted.select({
+            1: 0.4,
+            2: 0.3,
+            3: 0.15,
+            4: 0.1,
+            5: 0.05
+        }))
+        return {
+            wpm: utils.getRandomInt(...this.user.wpmRange),
+            accuracy: utils.getRandomFloat(...this.user.accuracyRange, 4),
+            targetPosition
+        }
     }
 }
 
