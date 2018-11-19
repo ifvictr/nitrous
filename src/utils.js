@@ -1,5 +1,3 @@
-const cookie = require('cookie')
-
 exports.getRange = (num, padding) => [num - padding, num + padding]
 
 exports.getRandomFloat = (min, max, fixed = 2) => {
@@ -22,4 +20,4 @@ exports.isRange = arr => (
 )
 
 exports.serializeCookies = obj => Object.entries(obj)
-    .reduce((str, [key, value]) => `${str} ${cookie.serialize(key, value)};`, '')
+    .reduce((str, [key, value]) => `${str} ${key}=${encodeURIComponent(value)};`, '')
