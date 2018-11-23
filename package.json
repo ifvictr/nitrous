@@ -4,6 +4,9 @@
   "main": "index.js",
   "author": "Victor Truong <me@ifvictr.com>",
   "license": "MIT",
+  "bin": {
+    "nitrous": "./cli.js"
+  },
   "dependencies": {
     "chalk": "^2.4.1",
     "commander": "^2.19.0",
