@@ -10,8 +10,8 @@ Usage: nitrous [options]
 Options:
   -V, --version              output the version number
   -a, --accuracy <accuracy>  Average accuracy of racer. Should be a float value between 0 (0%) and 1 (100%).
+  -c, --count <count>        The amount of races to complete before stopping. If omitted, the racer will never stop
   -f, --file <name>          File containing user credentials
-  -i, --iterations <count>   The amount of races to complete before stopping. If omitted, the racer will never stop
   -n, --maxNitros <count>    Maximum amount of nitros to use per race
   -p, --password <password>  Password of target user account
   -s, --targetPlace <place>  Target place (i.e. first place) of the racer (cannot be guaranteed)

@@ -9,8 +9,8 @@ program
     .version(package.version)
     .description(package.description)
     .option('-a, --accuracy <accuracy>', 'Average accuracy of racer. Should be a float value between 0 (0%) and 1 (100%).')
+    .option('-c, --count <count>', 'The amount of races to complete before stopping. If omitted, the racer will never stop')
     .option('-f, --file <name>', 'File containing user credentials')
-    .option('-i, --iterations <count>', 'The amount of races to complete before stopping. If omitted, the racer will never stop')
     .option('-n, --maxNitros <count>', 'Maximum amount of nitros to use per race')
     .option('-p, --password <password>', 'Password of target user account')
     .option('-s, --targetPlace <place>', 'Target place (i.e. first place) of the racer (cannot be guaranteed)')
@@ -33,7 +33,7 @@ if (file) {
 }
 // Let command arguments override values in file
 config = { ...config, ...program }
-config.iterations = config.iterations ? parseInt(config.iterations) : Infinity
+config.count = config.count ? parseInt(config.count) : Infinity
 config.timeout = config.timeout ? parseInt(config.timeout) : 3
 config.username = config.username.toLowerCase()
 
@@ -62,8 +62,8 @@ racer.on('playerFinish', data => {
     if (data.u === info.userID) {
         racer.stop()
         completedRaces++
-        if (completedRaces >= config.iterations) {
-            console.log(`${config.iterations} race(s) have been completed, exiting`)
+        if (completedRaces >= config.count) {
+            console.log(`${config.count} race(s) have been completed, exiting`)
         }
         else {
             console.log(`Race finished, refreshing in ${config.timeout} second(s)`)
