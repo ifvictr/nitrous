@@ -119,7 +119,9 @@ class Racer {
                     this.send({
                         stream: 'race',
                         msg: 'update',
-                        payload: (isIncorrect && errors < maxErrors) ? { e: ++errors } : { t: ++typed }
+                        payload: (isIncorrect && errors < maxErrors)
+                            ? { e: ++errors }
+                            : { t: ++typed }
                     })
                 }, (12000 / this.wpm))
                 break
