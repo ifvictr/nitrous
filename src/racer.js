@@ -155,17 +155,17 @@ class Racer {
     }
 
     getRandomStats() {
-        const targetPlace = parseInt(weighted.select({
+        const place = weighted.select({
             1: 0.4,
             2: 0.3,
             3: 0.15,
             4: 0.1,
             5: 0.05
-        }))
+        })
         return {
             wpm: utils.getRandomInt(...this.user.wpmRange),
             accuracy: utils.getRandomFloat(...this.user.accuracyRange, 4),
-            targetPlace
+            targetPlace: parseInt(place)
         }
     }
 }
