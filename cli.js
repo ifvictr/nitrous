@@ -32,12 +32,19 @@ if (file) {
     }
 }
 // Let command arguments override values in file
-config = { ...config, ...program }
-config.accuracy = config.accuracy ? parseFloat(config.accuracy) : 0.93
-config.count = config.count ? parseInt(config.count) : Infinity
-config.timeout = config.timeout ? parseInt(config.timeout) : 3
+config = {
+    accuracy: 0.93,
+    count: Infinity,
+    timeout: 3,
+    wpm: 40,
+    ...config,
+    ...program
+}
+config.accuracy = parseFloat(config.accuracy)
+config.count = parseInt(config.count)
+config.timeout = parseInt(config.timeout)
 config.username = config.username.toLowerCase()
-config.wpm = config.wpm ? parseInt(config.wpm) : 40
+config.wpm = parseInt(config.wpm)
 
 // Check if config has enough parameters
 const { accuracy, password, username, wpm } = config
