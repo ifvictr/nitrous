@@ -1,3 +1,11 @@
+exports.getPlace = n => ({
+    2200: 1,
+    2090: 2,
+    1980: 3,
+    1870: 4,
+    1760: 5
+})[n]
+
 exports.getRange = (num, padding) => [num - padding, num + padding]
 
 exports.getRandomFloat = (min, max, fixed = 2) => {
