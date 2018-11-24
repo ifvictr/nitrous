@@ -33,9 +33,11 @@ if (file) {
 }
 // Let command arguments override values in file
 config = { ...config, ...program }
+config.accuracy = config.accuracy ? parseFloat(config.accuracy) : 0.93
 config.count = config.count ? parseInt(config.count) : Infinity
 config.timeout = config.timeout ? parseInt(config.timeout) : 3
 config.username = config.username.toLowerCase()
+config.wpm = config.wpm ? parseInt(config.wpm) : 40
 
 // Check if config has enough parameters
 const { accuracy, password, username, wpm } = config
@@ -51,7 +53,7 @@ let completedRaces = 0
 
 user.init()
 racer.on('*', (event, data) => {
-    console.log(chalk.cyan(event), chalk.cyan(JSON.stringify(data, null, 2)))
+    console.log(chalk.cyan.bold(event), chalk.cyan(JSON.stringify(data, null, 2)))
 })
 racer.on('playerJoin', data => {
     if (data.profile.username.toLowerCase() === config.username) {
@@ -59,16 +61,17 @@ racer.on('playerJoin', data => {
     }
 })
 racer.on('playerFinish', data => {
-    if (data.u === info.userID) {
-        racer.stop()
-        completedRaces++
-        if (completedRaces >= config.count) {
-            console.log(`${config.count} race(s) have been completed, exiting`)
-        }
-        else {
-            console.log(`Race finished, refreshing in ${config.timeout} second(s)`)
-            setTimeout(() => racer.start(), config.timeout * 1000)
-        }
+    if (data.u !== info.userID) {
+        return
+    }
+    racer.stop()
+    completedRaces++
+    if (completedRaces >= config.count) {
+        console.log(`${config.count} race(s) have been completed, exiting`)
+    }
+    else {
+        console.log(`Race finished, refreshing in ${config.timeout} second(s)`)
+        setTimeout(() => racer.start(), config.timeout * 1000)
     }
 })
 racer.on('raceError', () => {
