@@ -113,17 +113,23 @@ class Racer {
                 this.lessonLength = parsed.payload.l.length
                 break
             case 'racing':
-                let errors = 0
                 let typed = 0
+                let errors = 0
+                let nitrosUsed = 0
                 const maxErrors = this.lessonLength * (1 - this.accuracy)
                 this.intervalId = setInterval(() => {
-                    const isIncorrect = Math.random() > this.accuracy
+                    const isIncorrect = Math.random() > this.accuracy && errors < maxErrors
+                    const useNitro = Math.random() > 0.9 && nitrosUsed < this.nitrosToUse
+                    const fromNitro = useNitro ? utils.getRandomInt(5, 12) : 0
                     this.send({
                         stream: 'race',
                         msg: 'update',
-                        payload: (isIncorrect && errors < maxErrors)
-                            ? { e: ++errors }
-                            : { t: ++typed }
+                        payload: {
+                            t: !isIncorrect ? ++typed + fromNitro : typed,
+                            e: isIncorrect ? ++errors : undefined,
+                            n: useNitro ? ++nitrosUsed : undefined,
+                            s: useNitro ? fromNitro : undefined
+                        }
                     })
                 }, (12000 / this.wpm))
                 break
