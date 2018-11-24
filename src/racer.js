@@ -174,7 +174,7 @@ class Racer {
             wpm: utils.getRandomInt(...this.user.wpmRange),
             accuracy: utils.getRandomFloat(...this.user.accuracyRange, 4),
             targetPlace: parseInt(place),
-            nitrosToUse: utils.getRandomInt(0, this.user.maxNitros)
+            nitrosToUse: utils.getRandomInt(0, this.user.opts.maxNitros)
         }
     }
 }

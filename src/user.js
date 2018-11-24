@@ -4,15 +4,28 @@ const utils = require('./utils')
 
 class User {
     constructor(opts) {
-        this.wpmRange = utils.isRange(opts.wpm)
-            ? opts.wpm
-            : utils.getRange(opts.wpm, 10)
-        this.accuracyRange = utils.isRange(opts.accuracy)
-            ? opts.accuracy
-            : utils.getRange(opts.accuracy, 0.05)
-        this.maxNitros = opts.maxNitros || 0
+        // Default config
+        this.opts = {
+            accuracy: 0.93,
+            maxNitros: 0,
+            password: null,
+            targetPlace: 1,
+            username: '',
+            wpm: 45,
+            ...opts
+        }
+        this.opts.accuracy = parseFloat(this.opts.accuracy)
+        this.opts.username = this.opts.username.toLowerCase()
+        this.opts.wpm = parseInt(this.opts.wpm)
 
-        this.client = nitrotype(opts)
+        this.wpmRange = utils.isRange(this.opts.wpm)
+            ? this.opts.wpm
+            : utils.getRange(this.opts.wpm, 10)
+        this.accuracyRange = utils.isRange(this.opts.accuracy)
+            ? this.opts.accuracy
+            : utils.getRange(this.opts.accuracy, 0.05)
+
+        this.client = nitrotype(this.opts)
         this.racer = new Racer(this)
     }
 
