@@ -157,7 +157,7 @@ class Racer {
     }
 
     setAccuracy(accuracy) {
-        this.accuracy = accuracy
+        this.accuracy = Math.min(Math.max(accuracy, 0), 1) // Require accuracy to be between 0 and 1
     }
 
     setTargetPlace(place) {
