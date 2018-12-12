@@ -81,7 +81,7 @@ class Racer {
         const { wpm, accuracy, targetPlace, nitrosToUse } = this.getRandomStats()
         this.setWPM(wpm)
         this.setAccuracy(accuracy)
-        this.setTargetPlace(targetPlace)
+        this.setTargetPlace(this.user.opts.targetPlace || targetPlace)
         this.setNitrosToUse(nitrosToUse)
 
         // Reset per-race data
@@ -148,7 +148,7 @@ class Racer {
                 break
             case 'racing':
                 this.intervalId = setInterval(() => {
-                    const isIncorrect = Math.random() > 0.95 && this.totalErrors < this.maxErrors
+                    const isIncorrect = Math.random() > this.accuracy && this.totalErrors < this.maxErrors
                     const useNitro = Math.random() > 0.9 && this.nitrosUsed < this.nitrosToUse
                     const charsFromNitro = useNitro ? utils.getRandomInt(5, 12) : 0
                     // Calculate the amount of characters to move forward
@@ -160,7 +160,7 @@ class Racer {
                             const racer = this.racers[this.currentPlace - 1]
                             const distance = targetRacer.t - racer.t
                             // TODO: Fine-tune catch-up logic
-                            this.totalTyped += Math.round(distance / 4) // Gradually catch up to target
+                            // this.totalTyped += Math.round(distance / 4) // Gradually catch up to target
                         }
                     }
 

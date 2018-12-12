@@ -9,12 +9,14 @@ class User {
             accuracy: 0.93,
             maxNitros: 0,
             password: null,
-            targetPlace: 1,
+            targetPlace: 0,
             username: '',
             wpm: 45,
             ...opts
         }
         this.opts.accuracy = parseFloat(this.opts.accuracy)
+        this.opts.maxNitros = parseInt(this.opts.maxNitros)
+        this.opts.targetPlace = parseInt(this.opts.targetPlace)
         this.opts.username = this.opts.username.toLowerCase()
         this.opts.wpm = parseInt(this.opts.wpm)
 
