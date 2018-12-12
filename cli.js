@@ -50,20 +50,14 @@ if (!(accuracy && password && username && wpm)) {
 
 const user = new User(config)
 const racer = user.getRacer()
-let info = {}
 let completedRaces = 0
 
 user.init()
 racer.on('*', (event, data) => {
     console.log(chalk.cyan.bold(event), chalk.cyan(JSON.stringify(data, null, 2)))
 })
-racer.on('playerJoin', data => {
-    if (data.profile.username.toLowerCase() === config.username) {
-        info = { ...data.profile }
-    }
-})
 racer.on('playerFinish', data => {
-    if (data.u !== info.userID) {
+    if (data.u !== racer.info.userID) {
         return
     }
     racer.stop()

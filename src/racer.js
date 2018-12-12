@@ -26,12 +26,35 @@ class Racer {
         this.targetPlace = 0
         this.nitrosToUse = 0
 
+        // Per-race data
+        this.info = {}
+        this.racers = []
+        this.lessonLength = 0
+        this.maxErrors = 0
+        this.currentPlace = 0
+        this.totalTyped = 0
+        this.totalErrors = 0
+        this.nitrosUsed = 0
+
         this.user = user
         this.emitter = mitt()
         this.ws = null
 
         this.onOpen = this.onOpen.bind(this)
         this.onMessage = this.onMessage.bind(this)
+
+        // Save racer info on join
+        this.on('playerJoin', data => {
+            if (data.profile.username.toLowerCase() === this.user.opts.username) {
+                this.info = { ...data.profile }
+            }
+        })
+        // Keep track of opponent racers and update racer place as race progresses
+        this.on('raceUpdate', data => {
+            this.racers = data.racers.sort((a, b) => b.t - a.t)
+            const index = this.racers.findIndex(racer => racer.u === this.info.userID)
+            this.currentPlace = index + 1 // Offset zero-based numbering
+        })
     }
 
     start() {
@@ -60,6 +83,16 @@ class Racer {
         this.setAccuracy(accuracy)
         this.setTargetPlace(targetPlace)
         this.setNitrosToUse(nitrosToUse)
+
+        // Reset per-race data
+        this.info = {}
+        this.racers = []
+        this.lessonLength = 0
+        this.maxErrors = 0
+        this.currentPlace = 0
+        this.totalTyped = 0
+        this.totalErrors = 0
+        this.nitrosUsed = 0
     }
 
     stop() {
@@ -111,24 +144,34 @@ class Racer {
         switch (event) {
             case 'countdown':
                 this.lessonLength = parsed.payload.l.length
+                this.maxErrors = Math.round(this.lessonLength * (1 - this.accuracy))
                 break
             case 'racing':
-                let typed = 0
-                let errors = 0
-                let nitrosUsed = 0
-                const maxErrors = this.lessonLength * (1 - this.accuracy)
                 this.intervalId = setInterval(() => {
-                    const isIncorrect = Math.random() > this.accuracy && errors < maxErrors
-                    const useNitro = Math.random() > 0.9 && nitrosUsed < this.nitrosToUse
-                    const fromNitro = useNitro ? utils.getRandomInt(5, 12) : 0
+                    const isIncorrect = Math.random() > 0.95 && this.totalErrors < this.maxErrors
+                    const useNitro = Math.random() > 0.9 && this.nitrosUsed < this.nitrosToUse
+                    const charsFromNitro = useNitro ? utils.getRandomInt(5, 12) : 0
+                    // Calculate the amount of characters to move forward
+                    if (!isIncorrect) {
+                        this.totalTyped += charsFromNitro + 1
+                        // Player isn't in target place and there are opponents to beat
+                        if (this.racers.length > 1 && this.currentPlace > this.targetPlace) {
+                            const targetRacer = this.racers[this.targetPlace - 1]
+                            const racer = this.racers[this.currentPlace - 1]
+                            const distance = targetRacer.t - racer.t
+                            // TODO: Fine-tune catch-up logic
+                            this.totalTyped += Math.round(distance / 4) // Gradually catch up to target
+                        }
+                    }
+
                     this.send({
                         stream: 'race',
                         msg: 'update',
                         payload: {
-                            t: !isIncorrect ? ++typed + fromNitro : typed,
-                            e: isIncorrect ? ++errors : undefined,
-                            n: useNitro ? ++nitrosUsed : undefined,
-                            s: useNitro ? fromNitro : undefined
+                            t: Math.min(this.totalTyped, this.lessonLength),
+                            e: isIncorrect ? ++this.totalErrors : undefined,
+                            n: useNitro ? ++this.nitrosUsed : undefined,
+                            s: useNitro ? charsFromNitro : undefined
                         }
                     })
                 }, (12000 / this.wpm))
