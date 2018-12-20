@@ -159,8 +159,7 @@ class Racer {
                             const targetRacer = this.racers[this.targetPlace - 1]
                             const racer = this.racers[this.currentPlace - 1]
                             const distance = targetRacer.t - racer.t
-                            // TODO: Fine-tune catch-up logic
-                            // this.totalTyped += Math.round(distance / 4) // Gradually catch up to target
+                            this.totalTyped += Math.min(Math.round(distance / 4), 3) // Gradually catch up to target
                         }
                     }
 
