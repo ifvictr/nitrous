@@ -1,6 +1,7 @@
 {
   "name": "@ifvictr/nitrous",
   "version": "1.0.0",
+  "description": "A fully-featured yet intuitive CLI bot for Nitro Type.",
   "main": "./cli.js",
   "repository": "https://github.com/ifvictr/nitrous",
   "author": "Victor Truong <me@ifvictr.com>",

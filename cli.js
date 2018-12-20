@@ -11,7 +11,7 @@ program
     .description(package.description)
     .option('-a, --accuracy <accuracy>', 'Average accuracy of racer. Should be a float value between 0 (0%) and 1 (100%).')
     .option('-c, --count <count>', 'The amount of races to complete before stopping. If omitted, the racer will never stop')
-    .option('-f, --file <name>', 'File containing user credentials')
+    .option('-f, --file <name>', 'File containing user credentials and other configurations')
     .option('-n, --maxNitros <count>', 'Maximum amount of nitros to use per race')
     .option('-p, --password <password>', 'Password of target user account')
     .option('-S, --smart', 'If enabled, WPM and accuracy automatically decrease over time to imitate fatigue')
