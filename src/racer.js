@@ -78,7 +78,7 @@ class Racer {
         this.ws.on('message', this.onMessage)
 
         // Prepare random stats for upcoming race
-        const { wpm, accuracy, targetPlace, nitrosToUse } = this.getRandomStats()
+        const { wpm, accuracy, targetPlace, nitrosToUse } = Racer.getRandomStats(this.user)
         this.setWPM(wpm)
         this.setAccuracy(accuracy)
         this.setTargetPlace(this.user.opts.targetPlace || targetPlace)
@@ -195,23 +195,39 @@ class Racer {
         }
     }
 
+    getWPM() {
+        return this.wpm
+    }
+
     setWPM(wpm) {
         this.wpm = wpm
+    }
+
+    getAccuracy() {
+        return this.accuracy
     }
 
     setAccuracy(accuracy) {
         this.accuracy = Math.min(Math.max(accuracy, 0), 1) // Require accuracy to be between 0 and 1
     }
 
+    getTargetPlace() {
+        return this.targetPlace
+    }
+
     setTargetPlace(place) {
         this.targetPlace = place
+    }
+
+    getNitrosToUse() {
+        return this.nitrosToUse
     }
 
     setNitrosToUse(count) {
         this.nitrosToUse = count
     }
 
-    getRandomStats() {
+    static getRandomStats(user) {
         const place = weighted.select({
             1: 0.4,
             2: 0.3,
@@ -220,10 +236,10 @@ class Racer {
             5: 0.05
         })
         return {
-            wpm: utils.getRandomInt(...this.user.wpmRange),
-            accuracy: utils.getRandomFloat(...this.user.accuracyRange, 4),
+            wpm: utils.getRandomInt(...user.getWPMRange()),
+            accuracy: utils.getRandomFloat(...user.getAccuracyRange(), 4),
             targetPlace: parseInt(place),
-            nitrosToUse: utils.getRandomInt(0, this.user.opts.maxNitros)
+            nitrosToUse: utils.getRandomInt(0, user.opts.maxNitros)
         }
     }
 }
