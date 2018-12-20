@@ -2,7 +2,7 @@ const mitt = require('mitt')
 const qs = require('qs')
 const weighted = require('weighted')
 const WebSocket = require('ws')
-const { SITE_URL, SOCKET_URL } = require('./constants')
+const { DEFAULT_USER_AGENT, SITE_URL, SOCKET_URL } = require('./constants')
 const utils = require('./utils')
 
 const eventNames = {
@@ -69,7 +69,7 @@ class Racer {
             {
                 headers: {
                     Cookie: utils.serializeCookies(this.user.getClient()._cookies),
-                    'User-Agent': 'Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/69.0.3497.100 Safari/537.36'
+                    'User-Agent': this.user.opts.userAgent || DEFAULT_USER_AGENT
                 },
                 origin: SITE_URL
             }

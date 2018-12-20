@@ -10,6 +10,7 @@ class User {
             maxNitros: 0,
             password: null,
             targetPlace: 0,
+            userAgent: null,
             username: '',
             wpm: 45,
             ...opts
