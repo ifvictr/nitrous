@@ -1,0 +1,9 @@
+{
+    "username": "nitrous",
+    "password": "nitrous",
+    "wpm": 100,
+    "accuracy": 0.97,
+    "maxNitros": 3,
+    "timeout": 3,
+    "smart": true
+}
