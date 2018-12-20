@@ -48,6 +48,22 @@ class User {
     getRacer() {
         return this.racer
     }
+
+    getWPMRange() {
+        return this.wpmRange
+    }
+
+    setWPMRange(min, max) {
+        this.wpmRange = [min, max]
+    }
+
+    getAccuracyRange() {
+        return this.accuracyRange
+    }
+
+    setAccuracyRange(min, max) {
+        this.accuracyRange = [min, max]
+    }
 }
 
 module.exports = User

@@ -14,6 +14,7 @@ Options:
   -f, --file <name>          File containing user credentials
   -n, --maxNitros <count>    Maximum amount of nitros to use per race
   -p, --password <password>  Password of target user account
+  -S, --smart                If enabled, WPM and accuracy automatically decrease over time to imitate fatigue
   -s, --targetPlace <place>  Target place (i.e. first place) of the racer (cannot be guaranteed)
   -t, --timeout <seconds>    Time to wait before starting the next race
   -u, --username <username>  Username (not display name) of target user account
