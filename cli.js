@@ -78,13 +78,11 @@ racer.on('playerFinish', () => {
     }
     totalHoursElapsed = hoursElapsed
 
-
     // Start decreasing accuracy after 6 hours and if median accuracy is still above the minimum
     const newMedianAccuracy = user.opts.accuracy - (0.002 * totalHoursElapsed) // -0.2% accuracy an hour
     if (totalHoursElapsed >= 6 && minAccuracy < newMedianAccuracy) {
         user.setAccuracyRange(...utils.getRange(newMedianAccuracy, 0.05))
     }
-
     // Decrease WPM after 12 hours and if median WPM is still above the minimum
     totalEnergy *= utils.getRandomFloat(0.97, 0.99) // Variable decrease of 1-3%
     const newMedianWPM = user.opts.wpm * totalEnergy
