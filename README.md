@@ -1,6 +1,6 @@
 # Nitrous
 
-A fully-featured yet intuitive CLI bot for Nitro Type.
+A fully-featured, yet intuitive CLI bot for Nitro Type.
 
 ## Installation
 
