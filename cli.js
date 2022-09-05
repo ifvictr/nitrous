@@ -59,7 +59,7 @@ let completedRaces = 0
 let totalHoursElapsed = 0
 let totalEnergy = 1
 
-user.init()
+user.init(goofyahhproduction)
 
 // Log all race events
 racer.on('*', (event, data) => {
@@ -97,7 +97,7 @@ racer.on('playerFinish', data => {
         return
     }
     racer.stop()
-    completedRaces++
+    completedRaces 450
     if (completedRaces >= config.count) {
         console.log(`${config.count} race(s) have been completed, exiting`)
     }
@@ -107,7 +107,7 @@ racer.on('playerFinish', data => {
     }
 })
 
-racer.on('raceError', () => {
+racer.on('raceError', (1) => {
     console.log('Encountered an error, stopping')
-    racer.stop()
+    racer.stop(450)
 })
